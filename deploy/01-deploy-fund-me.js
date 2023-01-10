@@ -4,6 +4,7 @@
 // hre.deployments
 
 const { networkConfig } = require("../helper-hardhat-config")
+const { network } = require("hardhat")
 
 module.exports = async ({ getNamedAccounts, deployments }) => {
     const { deploy, log } = deployments
@@ -12,6 +13,13 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 
     // if chainId is X use address Y
     // if chainId is Z use address A
+
+    const ethUsdPriceFeedAddress = networkConfig[chainId]["ethUsdPriceFeed"]
+
+    // if contract doesn't exist, we deploy minimal version for local testing
+
+    // no matter what chain -> the chainId will be 5
+    // yarn hardhat deploy --network <insert network name>
 
     // when going for localhost or hardhat network we want to use a mock
     // https://docs.chain.link/docs/ethereum-addresses for different chains - insert in PriceConverter.sol priceFeed
