@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.8;
+pragma solidity 0.8.7;
 
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+// in local code tell hardhat where to get this from: yarn add --dev @chainlink/contracts
 
 library PriceConverter {
     // We could make this public, but then we'd have to deploy it
