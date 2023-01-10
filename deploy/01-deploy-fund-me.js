@@ -5,6 +5,7 @@
 
 const { networkConfig, developmentChains } = require("../helper-hardhat-config")
 const { network } = require("hardhat")
+const { verify } = require("../utils/verify")
 
 module.exports = async ({ getNamedAccounts, deployments }) => {
     const { deploy, log } = deployments
@@ -31,16 +32,17 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 
     // when going for localhost or hardhat network we want to use a mock
     // https://docs.chain.link/docs/ethereum-addresses for different chains - insert in PriceConverter.sol priceFeed
+    const args = [ethUsdPriceFeedAddress]
     const fundMe = await deploy("FundMe", {
         from: deployer,
-        args: [ethUsdPriceFeedAddress], // price feed address
+        args: args, // price feed address
         log: true,
     })
     if (
         !developmentChains.includes(network.name) &&
         process.env.ETHERSCAN_API_KEY
     ) {
-        // VERIFY
+        await verify(fundMe.address, args)
     }
     log("-------------------------------------------------")
 }
