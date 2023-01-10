@@ -3,7 +3,7 @@
 // hre.getNamedAccounts
 // hre.deployments
 
-const { networkConfig } = require("../helper-hardhat-config")
+const { networkConfig, developmentChains } = require("../helper-hardhat-config")
 const { network } = require("hardhat")
 
 module.exports = async ({ getNamedAccounts, deployments }) => {
@@ -14,18 +14,34 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     // if chainId is X use address Y
     // if chainId is Z use address A
 
-    const ethUsdPriceFeedAddress = networkConfig[chainId]["ethUsdPriceFeed"]
+    // const ethUsdPriceFeedAddress = networkConfig[chainId]["ethUsdPriceFeed"]
+    let ethUsdPriceFeedAddress
+    if (developmentChains.includes(network.name)) {
+        const ethUsdAggregator = await deployments.get("MockV3Aggregator")
+        ethUsdPriceFeedAddress = ethUsdAggregator.address
+    } else {
+        ethUsdPriceFeedAddress = networkConfig[chainId]["ethUsdPriceFeed"]
+    }
+
+    // allows us to deploy anywhere without changing any of our solidity
 
     // if contract doesn't exist, we deploy minimal version for local testing
 
-    // no matter what chain -> the chainId will be 5
     // yarn hardhat deploy --network <insert network name>
 
     // when going for localhost or hardhat network we want to use a mock
     // https://docs.chain.link/docs/ethereum-addresses for different chains - insert in PriceConverter.sol priceFeed
     const fundMe = await deploy("FundMe", {
         from: deployer,
-        args: [address], // price feed address
+        args: [ethUsdPriceFeedAddress], // price feed address
         log: true,
     })
+    if (
+        !developmentChains.includes(network.name) &&
+        process.env.ETHERSCAN_API_KEY
+    ) {
+        // VERIFY
+    }
+    log("-------------------------------------------------")
 }
+module.exports.tags = ["all", "fundme"]
