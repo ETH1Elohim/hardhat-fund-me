@@ -2,6 +2,7 @@ const { run } = require("hardhat")
 const { modules } = require("web3")
 
 // verify on etherscan
+// error with VPN on
 async function verify(contractAddress, args) {
     console.log("Verifying contract...")
     try {
