@@ -1,7 +1,7 @@
 const { inputToConfig } = require("@ethereum-waffle/compiler")
 const { assert, expect } = require("chai")
 const { deployments, ethers, getNamedAccounts } = require("hardhat")
-const {developmentChains} = require("../../helper-hardhat-config")
+const { developmentChains } = require("../../helper-hardhat-config")
 
 // yarn hardhat test
 
