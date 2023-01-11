@@ -6,6 +6,7 @@
 const { networkConfig, developmentChains } = require("../helper-hardhat-config")
 const { network } = require("hardhat")
 const { verify } = require("../utils/verify")
+const { HARDHAT_NETWORK_RESET_EVENT } = require("hardhat/internal/constants")
 
 module.exports = async ({ getNamedAccounts, deployments }) => {
     const { deploy, log } = deployments
@@ -37,6 +38,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         from: deployer,
         args: args, // price feed address
         log: true,
+        waitConfirmations: network.config.blockConfirmations || 1,
     })
     if (
         !developmentChains.includes(network.name) &&
